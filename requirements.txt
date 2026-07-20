@@ -1,0 +1,27 @@
+# Deteksi objek
+ultralytics==8.3.0
+opencv-python==4.10.0.84
+
+# OCR
+pytesseract==0.3.13
+easyocr==1.7.2
+
+# Deep learning backend (dipakai EasyOCR)
+torch==2.4.1
+torchvision==0.19.1
+
+# Web app
+flask==3.0.3
+werkzeug==3.0.4
+
+# Utilitas umum
+numpy==1.26.4
+pandas==2.2.2
+matplotlib==3.9.2
+pillow==10.4.0
+pycocotools==2.0.8
+scikit-learn==1.5.2
+tqdm==4.66.5
+
+# Download dataset
+kaggle==1.6.17

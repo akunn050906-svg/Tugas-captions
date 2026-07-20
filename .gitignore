@@ -1,0 +1,25 @@
+# Dataset & model besar (jangan di-commit ke GitHub)
+data/raw/
+data/processed/
+models/*.pt
+*.pt
+
+# Environment
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Kaggle credentials
+kaggle.json
+
+# Upload sementara Flask
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+# Hasil training YOLOv8 (log, grafik, checkpoint sementara)
+runs/
