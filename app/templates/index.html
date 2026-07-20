@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>OCR Plat Nomor Kendaraan</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; max-width: 640px; margin: 40px auto; padding: 0 20px; background: #0f172a; color: #e2e8f0; }
+    h1 { color: #38bdf8; }
+    .card { background: #1e293b; border-radius: 12px; padding: 24px; margin-top: 20px; }
+    input[type=file] { margin: 12px 0; }
+    button { background: #38bdf8; color: #0f172a; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    button:hover { background: #0ea5e9; }
+    #result { margin-top: 20px; white-space: pre-wrap; }
+    img { max-width: 100%; border-radius: 8px; margin-top: 12px; }
+    .plate-text { font-size: 1.4em; font-weight: bold; color: #4ade80; letter-spacing: 2px; }
+  </style>
+</head>
+<body>
+  <h1>🚗 OCR Plat Nomor Kendaraan Indonesia</h1>
+  <p>Upload foto kendaraan, sistem akan mendeteksi lokasi plat lalu membaca teksnya.</p>
+
+  <div class="card">
+    <form id="uploadForm">
+      <input type="file" id="imageInput" name="image" accept="image/png, image/jpeg" required />
+      <br />
+      <button type="submit">Deteksi & Baca Plat</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('imageInput');
+      if (!fileInput.files.length) return;
+
+      const formData = new FormData();
+      formData.append('image', fileInput.files[0]);
+
+      resultDiv.innerHTML = '<p>Memproses...</p>';
+
+      try {
+        const res = await fetch('/predict', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.error) {
+          resultDiv.innerHTML = `<p style="color:#f87171">${data.error}</p>`;
+          return;
+        }
+
+        let html = `<img src="${data.image_url}" alt="uploaded" />`;
+        html += `<p>Jumlah plat terdeteksi: ${data.num_plates_detected}</p>`;
+        data.detections.forEach((det, i) => {
+          html += `<p>Plat ${i + 1}: <span class="plate-text">${det.plate_text || '(tidak terbaca)'}</span> `;
+          html += `(confidence deteksi: ${det.detection_confidence})</p>`;
+        });
+        resultDiv.innerHTML = html;
+      } catch (err) {
+        resultDiv.innerHTML = `<p style="color:#f87171">Terjadi kesalahan: ${err}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
